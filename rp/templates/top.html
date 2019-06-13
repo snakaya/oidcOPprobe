@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+{% include "_common_header.html" %}
+    <title>{% include "_app_name.html" %} | Top</title>
+</head>
+<body>
+	
+{% include "_common_nav.html" %}
+	<div id="mainContainer" class="opSettingsPanel authzPanel tokenPanel apiPanel">
+    
+{% include "_top_title.html" %}
+        <div class="container">
+            <h3 class="fg-black text-center">
+                OIDC/OAuth2 OPs
+            </h3>
+            <ul class="list-group">
+                {% for op in ops %}
+                <li class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="clearfix">
+                        <a href="#" data-opid="{{ op.opid }}"><i class="settingsBtn material-icons align-middle float-right" data-opid="{{ op.opid }}">settings</i></a>
+                        <h4 class="op-display-name align-middle float-lg-right">{{ op.displayname }}</h4>
+                        <div class="d-lg-flex flex-row">
+                            <img class="authzModalBtn align-middle" src="{{ op.loginlogo }}" data-opid="{{ op.opid }}"/>
+                            <button type="button" class="tokenModalBtn btn btn-outline-info m-1" data-opid="{{ op.opid }}"><i class="material-icons align-middle ">card_membership</i>TokenInfo</button>
+                        </div>
+                    </div>
+                    <div class="border d-lg-flex flex-row justify-content-end">
+                        <button type="button" class="apiModalBtn refresh-button btn btn-outline-primary m-1" data-opid="{{ op.opid }}" data-apitype="Refresh"><i class="material-icons align-middle ">autorenew</i>Refresh Token</button>
+                        <button type="button" class="apiModalBtn userinfo-button btn btn-outline-primary m-1" data-opid="{{ op.opid }}" data-apitype="UserInfo"><i class="material-icons align-middle ">account_circle</i>UserInfo</button>
+                        <button type="button" class="apiModalBtn intro-button btn btn-outline-primary m-1" data-opid="{{ op.opid }}" data-apitype="Introspection"><i class="material-icons align-middle ">done_outline</i>Introspection</button>
+                        <button type="button" class="apiModalBtn revoke-button btn btn-outline-primary m-1" data-opid="{{ op.opid }}" data-apitype="Revocation"><i class="material-icons align-middle ">remove_circle_outline</i>Revocation</button>
+                        <button type="button" class="apiModalBtn othersapi-button btn btn-outline-info m-1" data-opid="{{ op.opid }}" data-apitype="Custom">Custom</button>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+		</div>
+    </div>
+{% include "_opSettingsModal.html" %}
+		
+{% include "_authzModal.html" %}
+        
+{% include "_tokenModal.html" %}
+    
+{% include "_apiModal.html" %}
+
+{% include "_footer.html" %}
+
+{% include "_common_js.html" %}
+	
+    <script type="text/javascript">
+		var opSettings = {
+			{% for op in ops %}
+			"{{ op.opid }}" : {"loginLogo" : "{{ op.loginlogo }}", "displayName" : "{{ op.displayname }}"},
+			{% endfor %}
+		};
+        var flowTypes = {
+            "authorization_code": "Authorization Code",
+            "implicit": "Implicit",
+            "hybrid": "Hybrid",
+            "unknown": "Unknown",
+        };
+        
+        var showErrorBox = function(jqXHR) {
+            try{
+                ev = JSON.parse(jqXHR.responseText);
+                if('status' in ev) {
+                    notie.alert({ type: 'error', text: '<h3 class="font-weight-bold">ERROR</h3><p>' + ev.status + ' : ' + ev.message + '</p><p class="font-weight-light">' + jqXHR.status + ' ' + jqXHR.statusText + '</p>' });
+                } else if('error' in ev) {
+                    notie.alert({ type: 'error', text: '<h3 class="font-weight-bold">ERROR</h3><p>' + ev.error + ' : ' + ev.error_description + '</p><p class="font-weight-light">' + jqXHR.status + ' ' + jqXHR.statusText + '</p>' });
+                } else {
+                    notie.alert({ type: 'error', text: '<strong>ERROR</strong>  ' + jqXHR.status + ' ' + jqXHR.statusText });
+                }
+            } catch(ex) {
+                notie.alert({ type: 'error', text: '<strong>ERROR</strong>  ' + jqXHR.status + ' ' + jqXHR.statusText });
+            }
+        };
+	</script>
+        
+    <script type="text/javascript">
+		$(document).ready(function(){
+            // Loading-Anim Default Settings
+            $.LoadingOverlaySetup({
+                imageColor: "#ffcc00"
+            });
+            
+            // Alert Default Settings
+            notie.setOptions({
+                alertTime: 4,
+            });
+        });
+	</script>
+
+{% include "_opSettingsModal_js.html" %}
+
+{% include "_authzModal_js.html" %}
+    
+{% include "_tokenModal_js.html" %}
+    
+{% include "_apiModal_js.html" %}
+
+</body>
+</html>

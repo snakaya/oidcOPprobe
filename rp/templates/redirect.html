@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+{% include "_common_header.html" %}
+    <title>{% include "_app_name.html" %} | Error</title>
+</head>
+<body>
+{% include "_common_nav.html" %}
+	<div id="mainContainer" class="container mt-5">
+		<h1 id="title">Waiting...</h1>
+        <h4 id="msg"></h4>
+        <p id="sub_msg" class="lead mt-2"></p>
+	</div>
+{% include "_footer.html" %}
+
+{% include "_common_js.html" %}
+    <script type="text/javascript">
+		$(document).ready(function() {
+            var opid = "{{ opId }}";
+			var params = "";
+            if($(location).attr('search') != "") {
+				params = $(location).attr('search').replace(/\?/g,'');
+                $('#msg').text('Processing...');
+            } else if($(location).attr('hash') != ""){
+				params = $(location).attr('hash').replace(/#/g,'');
+                $('#msg').text('Processing...');
+            } else {
+				$('#title').text('Error');
+				$('#msg').text('Oops! Parameters is nothing!');
+			}
+			if (params.indexOf('error=',0) == -1) {
+                $.LoadingOverlay("show", true);
+                $.ajax({
+					method: "POST",
+					url: "/apis/OIDC/Authz/Response/" + opid,
+					dataType: "json",
+					headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
+					data: JSON.stringify({
+						'params': params
+					}),
+				}).done(function( data, textStatus, jqXHR ) {
+                    $('#title').text('Finished');
+                    $('#msg').text('You can close this window.');
+                    $('#sub_msg').text(params);
+				}).fail(function( jqXHR, textStatus, errorThrown ) {
+					e = JSON.parse(jqXHR.responseText);
+                    notie.alert({ type: 'error', text: '<strong>ERROR</strong>  ' + jqXHR.status + ' ' + jqXHR.statusText + '[ ' + e.status + ' : ' + e.message + ' ]' });
+				}).always(function( ) {
+					$.LoadingOverlay("hide", true);
+				});
+
+			} else if (params.indexOf('error=',0) > -1) {
+				$('#title').text('Error');
+				var paramsDict = parseParams(params);
+				if(paramsDict != null) {
+					if(typeof paramsDict.error !== 'undefined' && typeof paramsDict.error_description !== 'undefined') {
+						$('#msg').text(paramsDict.error + '  [' + paramsDict.error_description + ']');
+					} else if(typeof paramsDict.error !== 'undefined' && typeof paramsDict.error_description === 'undefined') {
+						$('#msg').text(paramsDict.error);
+					}
+				}
+			} else {
+				$('#title').text('Error');
+				$('#msg').text('Oops! Invalid parameters!');
+			}
+            
+        });
+		
+        var parseParams = function(params) {
+			if(params.length > 1) {
+				var ret = {};
+				var p = params.split('&');
+				for(var i = 0; i < p.length; i++) {
+					var r = p[i].split('=');
+					ret[r[0]] = r[1];
+				}
+				return ret;
+			} else {
+				return null;
+			}
+		};
+	</script>
+</body>
+</html>

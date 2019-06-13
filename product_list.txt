@@ -1,0 +1,11 @@
+jQuery LoadingOverlay
+https://gasparesganga.com/labs/jquery-loading-overlay/
+Gaspare Sganga
+The MIT License
+
+notie
+https://github.com/jaredreich/notie
+Jared Reich
+The MIT License
+
+

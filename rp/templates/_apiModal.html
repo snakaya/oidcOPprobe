@@ -1,0 +1,97 @@
+	<div class="container apiPanel mt-5" id="apiModal" style="display: none;">
+		<div class="text-center w-100">
+			<h1>Calling <strong id="apiModalAPINameText">(API Name)</strong> API</h1>
+			<h2 id="apiModalOPNameText">(OP Name)</h2>
+		</div>
+        <div id="APIMmainContainer" class="container clearfix mt-1">
+            <form id="apiForm">
+                <h3 class="text-center bg-light text-secondary my-1">Parameters</h3>
+                <div class="form-group">
+                    <label for="apiURLText">URL</label>
+                    <input type="text" class="form-control bg-light" id="apiURLText" aria-describedby="apiURLHelp" required="true">
+                </div>
+                <div class="form-group">
+                    <label for="apiAuthorizationHeaderSelect">Authorization Header</label>
+                    <select class="form-control custom-select bg-light" id="apiAuthorizationHeaderSelect" readonly="true">
+                        <option value="bearer" selected>Bearer (Access Token)</option>
+                        <option value="basic">Basic (ClientID + ClientSecret)</option>
+                        <option value="none">None</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="apiMethodSelect">Method</label>
+                    <select class="form-control custom-select bg-light" id="apiMethodSelect" readonly="true">
+                        <option value="GET" selected>GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="PATCH">PATCH</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="apiContentTypeSelect">Content Type</label>
+                    <select class="form-control custom-select bg-light" id="apiContentTypeSelect" readonly="true">
+                        <option value="json" selected>application/json</option>
+                        <option value="form">application/x-www-form-urlencoded</option>
+                        <option value="none">None</option>
+                    </select>
+                </div>
+                <div id="apiTokenType" class="form-group">
+                    <label for="apiTokenTypeSelect">Token Type</label>
+                    <select class="form-control custom-select bg-light" id="apiTokenTypeSelect" readonly="true">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="apiParamsTextArea">Parameters</label>
+                    <textarea class="form-control bg-light" id="apiParamsTextArea" rows="3" aria-label="Parameters" readonly="true"></textarea>
+                </div>
+                <button id="apiCallBtn" type="button" class="btn btn-primary btn-lg btn-block my-4">Call API</button>
+                <h3 class="text-center bg-light text-secondary my-1">Results</h3>
+                <ul class="nav nav-tabs nav-fill" id="apiTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="apiResponseTab" data-toggle="tab" href="#apiResponseTabPanel" role="tab" aria-controls="apiResponseTabPanel" aria-selected="true">Response</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="apiRequestTab" data-toggle="tab" href="#apiRequestTabPanel" role="tab" aria-controls="apiRequestTabPanel" aria-selected="false">Request</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="apiResponseTabContent">
+                    <div class="tab-pane fade show active" id="apiResponseTabPanel" role="tabpanel" aria-labelledby="apiResponseTab">
+                        <div class="form-group">
+                            <label for="apiStatusCodeText">Status Code</label>
+                            <input type="text" class="form-control bg-light" id="apiStatusCodeText" aria-describedby="apiStatusCodeHelp" readonly="true">
+                        </div>
+                        <div class="form-group">
+                            <label for="apiResponseHeadersTextArea">Response Headers</label>
+                            <textarea class="form-control bg-light" id="apiResponseHeadersTextArea" rows="4" aria-label="Response Headers" readonly="true"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="apiResponseParamsTextArea">Response Body</label>
+                            <textarea class="form-control bg-light" id="apiResponseParamsTextArea" rows="7" aria-label="API Response" readonly="true"></textarea>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="apiRequestTabPanel" role="tabpanel" aria-labelledby="apiRequestTab">
+                        <div class="form-group">
+                            <label for="apiMethodText">Method</label>
+                            <input type="text" class="form-control bg-light" id="apiMethodText" aria-describedby="apiMethodHelp" readonly="true">
+                        </div>
+                        <div class="form-group">
+                            <label for="apiRequestURIText">Request URI</label>
+                            <input type="text" class="form-control bg-light" id="apiRequestURIText" aria-describedby="apiRequestURIHelp" readonly="true">
+                        </div>
+                        <div class="form-group">
+                            <label for="apiRequestHeadersTextArea">Request Headers</label>
+                            <textarea class="form-control bg-light" id="apiRequestHeadersTextArea" rows="4" aria-label="Request Headers" readonly="true"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="apiRequestParamsTextArea">Request Body</label>
+                            <textarea class="form-control bg-light" id="apiRequestParamsTextArea" rows="7" aria-label="API Request" readonly="true"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button id="apiModalCloseBtn" type="button" class="btn btn-secondary">Close</button>
+        </div>
+    </div>

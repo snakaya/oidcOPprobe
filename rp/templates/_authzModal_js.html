@@ -1,0 +1,140 @@
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var startAuthzFunc = function(src_ev, openAuthsModal) {
+                $.LoadingOverlay("show", true);
+                $.ajax({
+                    method: "GET",
+                    url: "/apis/OIDC/Authz/Request/" + $(src_ev.currentTarget).data('opid'),
+                    dataType: "json"
+                }).done(function( data, textStatus, jqXHR ) {
+                    
+                    $('#authzModal').data('opid', $(src_ev.currentTarget).data('opid'));
+                    $('#authzModalOPNameText').text(opSettings[$(src_ev.currentTarget).data('opid')].displayName);
+                    $('#authzModalFlowTypeText').text(flowTypes[data.flowType]);
+                    $('#authzURLTextArea').val(data.authorizationURL);
+                    if(data.flowType == 'implicit') {
+                        $('#authzModalTokenRequest').addClass('d-none');
+                    } else {
+                        $('#authzModalTokenRequest').removeClass('d-none');
+                    }
+                    
+                    openAuthsModal();
+                    
+                }).fail(function( jqXHR, textStatus, errorThrown ) {
+                    if (jqXHR.status == "400") {
+                        notie.alert({ type: 'warning', text: '<h3 class="font-weight-bold">WARNING</h3><p>Please Setup OP\'s Preference.</p>' });
+                    } else {
+                        showErrorBox(jqXHR);
+                    }
+                }).always(function( ) {
+                    $.LoadingOverlay("hide", true);
+                    $(".btn").prop("disabled", false);
+                });
+            };
+            
+            
+            $(".authzModalBtn").on('click', function (e) {
+				$("#authzResponseParamsTextArea").val("");
+				$("#authzCodeText").val("");
+				$("#authzAccessTokenText").val("");
+				$("#authzExpireDateText").val("");
+				$("#authzIdTokenTextArea").val("");
+                $("#authzStateText").val("");
+                $("#authzTokenMethodText").val("");
+                $("#authzTokenRequestURIText").val("");
+                $("#authzTokenRequestHeadersTextArea").val("");
+				$("#authzTokenRequestParamsTextArea").val("");
+                $("#authzTokenStatusCodeText").val("");
+                $("#authzTokenResponseHeadersTextArea").val("");
+				$("#authzTokenResponseParamsTextArea").val("");
+				$("#authzTokenAccessTokenText").val("");
+				$("#authzTokenExpireDateText").val("");
+				$("#authzTokenRefreshTokenText").val("");
+				$("#authzTokenIdTokenTextArea").val("");
+                
+				$(".btn").prop("disabled", true);
+                startAuthzFunc(e, function() {$('.authzPanel').animate({height: 'toggle'}, 300); return false;});
+            });
+            
+            $("#authzRequestAuthnBtn").on('click', function (e) {
+                window.open( $('#authzURLTextArea').val() );
+            });
+            
+            $("#authzGetResponseBtn").on('click', function (e) {
+                $(".btn").prop("disabled", true);
+                $.LoadingOverlay("show", true);
+                $.ajax({
+					method: "GET",
+					url: "/apis/OIDC/Authz/Response/" + $('#authzModal').data('opid'),
+					dataType: "json",
+				}).done(function( data, textStatus, jqXHR ) {
+                    $('#authzResponseParamsTextArea').val(data.response);
+                    $('#authzCodeText').val(data.code);
+                    $('#authzAccessTokenText').val(data.access_token);
+                    $('#authzExpireDateText').val(data.expireDate);
+                    $('#authzIdTokenTextArea').val(data.id_token_decoded);
+                    $('#authzStateText').val(data.state);
+                    
+                    notie.alert({ type: 'success', text: 'Getting successful.'});
+				}).fail(function( jqXHR, textStatus, errorThrown ) {
+					showErrorBox(jqXHR);
+				}).always(function( ) {
+					$.LoadingOverlay("hide", true);
+                    $(".btn").prop("disabled", false);
+				});
+            });
+            
+            $("#authzRequestTokenBtn").on('click', function (e) {
+                if($('#authzCodeText').val() == "" || $('#authzStateText').val() == "") {
+                    notie.alert({ type: 'warning', text: '<h3 class="font-weight-bold">WARNING</h3><p>Some Required Fields are not entered.</p>' });
+                    return;
+                }
+                $(".btn").prop("disabled", true);
+                $.LoadingOverlay("show");
+				$.ajax({
+					method: "POST",
+					url: "/apis/OIDC/Token/" + $('#authzModal').data('opid'),
+					dataType: "json",
+					headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
+					data: JSON.stringify({
+						'code': $('#authzCodeText').val(),
+						'state': $('#authzStateText').val(),
+                        'doCheckState': ($('#authzTokenStateCheck').prop('checked')) ? 'true' : 'false',
+					}),
+				}).done(function( data, textStatus, jqXHR ) {
+                    $("#authzTokenMethodText").val(data.requestMethod);
+                    $("#authzTokenRequestURIText").val(data.requestURI);
+                    $('#authzTokenRequestHeadersTextArea').val(data.requestHeaders);
+                    $('#authzTokenRequestParamsTextArea').val(data.requestBody);
+                    $("#authzTokenStatusCodeText").val(data.statusCode);
+                    $('#authzTokenResponseHeadersTextArea').val(data.responseHeaders);
+					if (data.response) {
+						$('#authzTokenResponseParamsTextArea').val(data.response);
+					} else {
+						$('#authzTokenResponseParamsTextArea').val(data.responseBody);
+					}
+                    $('#authzTokenAccessTokenText').val(data.access_token);
+                    $('#authzTokenExpireDateText').val(data.expireDate);
+                    $('#authzTokenRefreshTokenText').val(data.refresh_token);
+                    $('#authzTokenIdTokenTextArea').val(data.id_token_decoded);
+                    
+					if (data.statusCode == '200') {
+						notie.alert({ type: 'success', text: 'Exchange to Tokens.'});
+					} else {
+						showErrorBox(jqXHR);
+					}
+                    
+				}).fail(function( jqXHR, textStatus, errorThrown ) {
+					showErrorBox(jqXHR);
+				}).always(function( ) {
+					$.LoadingOverlay("hide", true);
+                    $(".btn").prop("disabled", false);
+				});
+            });
+			
+			$("#authzModalCloseBtn").on('click', function (e) {
+				$('.authzPanel').animate({height: 'toggle'}, 300);
+			});
+            
+		});
+    </script>

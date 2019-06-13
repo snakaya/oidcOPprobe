@@ -1,0 +1,117 @@
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var tokenSelect = {};
+            var startAPIModalFunc = function(e, openAPIModal) {
+                $.LoadingOverlay("show", true);
+                $.ajax({
+                    method: "GET",
+                    url: "/apis/OIDC/" + $(e.currentTarget).data('apitype') + '/' + $(e.currentTarget).data('opid'),
+                    dataType: "json"
+                }).done(function( data, textStatus, jqXHR ) {
+                    $('#apiModal').data('opid', $(e.currentTarget).data('opid'));
+                    $('#apiModal').data('apitype', $(e.currentTarget).data('apitype'));
+                    $('#apiCallBtn').data('opid', $(e.currentTarget).data('opid'));
+                    $('#apiCallBtn').data('apitype', $(e.currentTarget).data('apitype'));
+                    $('#apiModalAPINameText').text(data.apiName);
+                    $('#apiModalOPNameText').text(opSettings[$(e.currentTarget).data('opid')].displayName);
+                    $('#apiURLText').val(data.apiEndPoint);
+                    $('#apiAuthorizationHeaderSelect').val(data.authorizationHeader);
+                    $('#apiMethodSelect').val(data.method);
+                    $('#apiContentTypeSelect').val(data.contentType);
+                    if ($(e.currentTarget).data('apitype') == 'Revocation' || $(e.currentTarget).data('apitype') == 'Introspection') {
+                        if(data.tokenParams) {
+                            tokenSelect = data.tokenParams;
+                            for(var t in tokenSelect) {
+                                $('#apiTokenTypeSelect').append('<option value="' + t + '">' + ( t=='access_token' ? 'Access Token' : 'Refresh Token' ) + '</option>');
+                            }
+                        }
+                        $('#apiTokenType').removeClass('d-none');
+                        $('#apiParamsTextArea').val( tokenSelect[$('#apiTokenTypeSelect option:selected').val()] );
+                    } else {
+                        $('#apiTokenType').addClass('d-none');
+                        $('#apiParamsTextArea').val(data.params);
+                    }
+
+                    openAPIModal();
+                        
+                }).fail(function( jqXHR, textStatus, errorThrown ) {
+                    if (jqXHR.status == "400") {
+                        if ($(e.currentTarget).data('apitype') == 'Introspection') {
+                            notie.alert({ type: 'warning', text: '<h3 class="font-weight-bold">WARNING</h3><p>Introspection is not servicing yet.</p>' });
+                        } else {
+                            notie.alert({ type: 'warning', text: '<h3 class="font-weight-bold">WARNING</h3><p>Please Setup OP\'s Preference.</p>' });
+                        }
+                    } else if (jqXHR.status == "404") {
+                        notie.alert({ type: 'warning', text: '<h3 class="font-weight-bold">WARNING</h3><p>Please Setup API Endpoint into OP\'s Preference.</p>' });
+                    } else {
+                        showErrorBox(jqXHR);
+                    }
+                }).always(function( ) {
+                    $.LoadingOverlay("hide", true);
+                    $(".btn").prop("disabled", false);
+                });
+            };
+            
+            var callAPIFunc = function(e) {
+                $.LoadingOverlay("show", true);
+                var postdata = {
+                    'apiEndPoint': $('#apiURLText').val(),
+                    'authorizationHeader': $('#apiAuthorizationHeaderSelect').val(),
+                    'method': $('#apiMethodSelect').val(),
+                    'contentType': $('#apiContentTypeSelect option:selected').val(),
+                    'params': $('#apiParamsTextArea').val(),
+				};
+                if($(e.currentTarget).data('apitype') == 'Revocation') {
+                    postdata['tokenType'] = $('#apiTokenTypeSelect option:selected').val();
+                }
+                $.ajax({
+                    method: "POST",
+                    url: "/apis/OIDC/" + $(e.currentTarget).data('apitype') + '/' + $(e.currentTarget).data('opid'),
+                    dataType: "json",
+					headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
+					data: JSON.stringify(postdata),
+                }).done(function( data, textStatus, jqXHR ) {
+                    $('#apiMethodText').val(data.requestMethod);
+                    $('#apiRequestURIText').val(data.requestURI);
+                    $('#apiRequestHeadersTextArea').val(data.requestHeaders);
+                    $('#apiRequestParamsTextArea').val(data.requestBody);
+                    $('#apiStatusCodeText').val(data.statusCode);
+                    $('#apiResponseHeadersTextArea').val(data.responseHeaders);
+                    $('#apiResponseParamsTextArea').val(data.responseBody);
+
+                }).fail(function( jqXHR, textStatus, errorThrown ) {
+                    showErrorBox(jqXHR);
+                }).always(function( ) {
+                    $.LoadingOverlay("hide", true);
+                    $(".btn").prop("disabled", false);
+                });
+            };
+            
+            $(".apiModalBtn").on('click', function (e) {
+                $("#apiModalAPINameText").val("");
+                $("#apiURLText").val("");
+                $("#apiMethodText").val("");
+                $("#apiRequestURIText").val("");
+                $("#apiRequestHeadersTextArea").val("");
+                $("#apiRequestParamsTextArea").val("");
+                $("#apiStatusCodeText").val("");
+                $("#apiResponseHeadersTextArea").val("");
+                $("#apiTokenTypeSelect").children().remove();
+                $("#apiResponseParamsTextArea").val("");
+                
+                $(".btn").prop("disabled", true);
+                startAPIModalFunc(e, function() {$('.apiPanel').animate({height: 'toggle'}, 300); return false;});
+            });
+            $("#apiCallBtn").on('click', function (e) {
+                $(".btn").prop("disabled", true);
+                callAPIFunc(e);
+            });
+            $("#apiModalCloseBtn").on('click', function (e) {
+                $('.apiPanel').animate({height: 'toggle'}, 300);
+            });
+            $("#apiTokenTypeSelect").on('change', function (e) {
+                $('#apiParamsTextArea').val(tokenSelect[$('#apiTokenTypeSelect option:selected').val()]);
+            });
+        });
+        
+    </script>

@@ -1,0 +1,120 @@
+        <div class="container authzPanel mt-5" id="authzModal" style="display: none;">
+            <div class="text-center w-100">
+                <h1>OIDC/OAuth2 RP for <span id="authzModalOPNameText">(OP Name)</span></h1>
+                <p class="lead">Step By Step, Authorization and Tokenization TimeLine.</p>
+            </div>
+            <div id="AMmainContainer" class="container clearfix">
+                <h2>Flow Type : <strong id="authzModalFlowTypeText" class="">(Flow Type)</strong></h2>
+                <form id="timeLineForm">
+                    <div id="authzModalAuthzURL" class="my-1">
+                        <h3 class="text-center bg-light text-secondary">1. Generated Authorization URL</h3>
+                        <div class="form-group">
+                            <label for="tokenIdTokenTextArea">Authorization URL</label>
+                            <textarea class="form-control bg-light" id="authzURLTextArea" rows="4" aria-label="Authorization URL"></textarea>
+                        </div>
+                        <button id="authzRequestAuthnBtn" type="button" class="btn btn-primary btn-lg btn-block">Request Authentication</button>
+                    </div>
+                    <div id="authzModalAuthzResponse" class="my-1">
+                        <h3 class="text-center bg-light text-secondary">2. Authorization Response</h3>
+                        <button id="authzGetResponseBtn" type="button" class="btn btn-primary btn-lg btn-block" data-opid="{{ op.opid }}">Get Response</button>
+                        <div class="form-group">
+                            <label for="authzResponseParamsTextArea">Response Body</label>
+                            <textarea class="form-control bg-light" id="authzResponseParamsTextArea" rows="4" aria-label="Authorization Response" readonly="true"></textarea>
+                        </div>
+                        <div class="border my-1 p-1">
+                            <div class="form-group">
+                                <label for="authzCodeText">Code</label>
+                                <input type="text" class="form-control bg-light" id="authzCodeText" aria-describedby="authzCodeHelp" readonly="true">
+                            </div>
+                            <div class="form-group">
+                                <label for="authzAccessTokenText">Access Token</label>
+                                <input type="text" class="form-control bg-light" id="authzAccessTokenText" aria-describedby="authzAccessTokenHelp" readonly="true">
+                            </div>
+                            <div class="form-group">
+                                <label for="authzExpireDateText">Expire Date</label>
+                                <input type="text" class="form-control bg-light" id="authzExpireDateText" aria-describedby="authzExpireDateHelp" readonly="true">
+                            </div>
+                            <div class="form-group">
+                                <label for="authzIdTokenTextArea">ID Token</label>
+                                <textarea class="form-control bg-light" id="authzIdTokenTextArea" rows="6" aria-label="ID Token" readonly="true"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="authzStateText">State</label>
+                                <input type="text" class="form-control bg-light" id="authzStateText" aria-describedby="authzStateHelp" readonly="true">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="authzModalTokenRequest my-1">
+                        <h3 class="text-center bg-light text-secondary">3. Request Token</h3>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="authzTokenStateCheck" id="authzTokenStateCheck" checked>
+                            <label class="form-check-label" for="authzTokenStateCheck">Check State Matching</label>
+                        </div>
+                        <button id="authzRequestTokenBtn" type="button" class="btn btn-primary btn-lg btn-block" data-opid="{{ op.opid }}">Request Token</button>
+                        <ul class="nav nav-tabs nav-fill" id="authzTokenTab" role="tablist">
+                            <li class="nav-item">
+                              <a class="nav-link active" id="authzTokenResponseTab" data-toggle="tab" href="#authzTokenResponseTabPanel" role="tab" aria-controls="authzTokenResponseTabPanel" aria-selected="true">Response</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="authzTokenRequestTab" data-toggle="tab" href="#authzTokenRequestTabPanel" role="tab" aria-controls="authzTokenRequestTabPanel" aria-selected="false">Request</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="authzTokenResponseTabContent">
+                            <div class="tab-pane fade show active" id="authzTokenResponseTabPanel" role="tabpanel" aria-labelledby="authzTokenResponseTab">
+                                <div class="form-group">
+                                    <label for="authzTokenStatusCodeText">Status Code</label>
+                                    <input type="text" class="form-control bg-light" id="authzTokenStatusCodeText" aria-describedby="authzTokenStatusCodeHelp" readonly="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="authzTokenResponseHeadersTextArea">Response Headers</label>
+                                    <textarea class="form-control bg-light" id="authzTokenResponseHeadersTextArea" rows="4" aria-label="Response Headers" readonly="true"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="authzTokenResponseParamsTextArea">Response Body</label>
+                                    <textarea class="form-control bg-light" id="authzTokenResponseParamsTextArea" rows="4" aria-label="Tokenization Response" readonly="true"></textarea>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="authzTokenRequestTabPanel" role="tabpanel" aria-labelledby="authzTokenRequestTab">
+                                <div class="form-group">
+                                    <label for="authzTokenMethodText">Method</label>
+                                    <input type="text" class="form-control bg-light" id="authzTokenMethodText" aria-describedby="authzTokenMethodHelp" readonly="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="authzTokenRequestURIText">Request URI</label>
+                                    <input type="text" class="form-control bg-light" id="authzTokenRequestURIText" aria-describedby="authzTokenRequestURIHelp" readonly="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="authzTokenRequestHeadersTextArea">Request Headers</label>
+                                    <textarea class="form-control bg-light" id="authzTokenRequestHeadersTextArea" rows="4" aria-label="Request Headers" readonly="true"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="authzTokenRequestParamsTextArea">Request Body</label>
+                                    <textarea class="form-control bg-light" id="authzTokenRequestParamsTextArea" rows="4" aria-label="Tokenization Request" readonly="true"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border my-1 p-1">
+                            <div class="form-group">
+                                <label for="authzTokenAccessTokenText">Access Token</label>
+                                <input type="text" class="form-control bg-light" id="authzTokenAccessTokenText" aria-describedby="authzTokenAccessTokenHelp" readonly="true">
+                            </div>
+                            <div class="form-group">
+                                <label for="authzTokenExpireDateText">Expire Date</label>
+                                <input type="text" class="form-control bg-light" id="authzTokenExpireDateText" aria-describedby="authzTokenExpireDateHelp" readonly="true">
+                            </div>
+                            <div class="form-group">
+                                <label for="authzTokenRefreshTokenText">Refresh Token</label>
+                                <input type="text" class="form-control bg-light" id="authzTokenRefreshTokenText" aria-describedby="authzTokenRefreshTokenHelp" readonly="true">
+                            </div>
+                            <div class="form-group">
+                                <label for="authzTokenIdTokenTextArea">ID Token</label>
+                                <textarea class="form-control bg-light bg-light" id="authzTokenIdTokenTextArea" rows="6" aria-label="ID Token" readonly="true"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+	    <div class="modal-footer">
+		  <button id="authzModalCloseBtn" type="button" class="btn btn-secondary">Close</button>
+	    </div>
+        </div>

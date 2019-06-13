@@ -1,0 +1,151 @@
+	<script type="text/javascript">
+		var opconf = {};
+		$(document).ready(function(){
+			var startOPSettingsFunc = function(e, openOPSettings) {
+                $.LoadingOverlay("show", true);
+				$('#opSettingsModal').data('opid', $(e.currentTarget).data('opid'));
+				$('#opNameText').text(opSettings[$(e.currentTarget).data('opid')].displayName);
+
+                $.ajax({
+                    method: "GET",
+                    url: "/apis/OPSettings/" + $(e.currentTarget).data('opid'),
+                    dataType: "json"
+                }).done(function( data, textStatus, jqXHR ) {
+					$('#clientIdText').val(data.clientId);
+					$('#clientSecretText').val(data.clientSecret);
+					$('#redirectURLText').val(data.redirect_url);
+					$('#scopeText').val(data.scope);
+					$('#responseTypeText').val(data.responseType);
+					$('#authzURLText').val(data.authorizationEndpoint);
+					$('#tokenURLText').val(data.tokenizationEndpoint);
+					$('#userinfoURLText').val(data.userinfoEndpoint);
+					$('#revocationURLText').val(data.revocationEndpoint);
+					$('#introURLText').val(data.introspectionEndpoint);
+					$('#otherOptionsTextArea').val(data.options);
+					if(data.supportPkce) {
+						$('#supportPkceCheck').prop('checked', true);
+					} else {
+						$('#supportPkceCheck').prop('checked', false);
+					}
+					$('#issuerText').val(data.issuer);
+					$('#configurationsTextArea').val(data.configurations);
+					$('#JWKSetTextArea').val(data.JWKSet);
+					
+					if($("#scopeText").val() == "") {
+						$("#scopeText").val('openid');
+					}
+					
+					opconf = JSON.parse(data.configurations);
+					
+					if(opconf.scopes_supported) {
+						for(oc in opconf.scopes_supported) {
+							$('#scopeSelect').append('<option value="' + opconf.scopes_supported[oc] + '">' + opconf.scopes_supported[oc] + '</option>');
+						}
+					};
+					if(opconf.response_types_supported) {
+						for(oc in opconf.response_types_supported) {
+							$('#responseTypeSelect').append('<option value="' + opconf.response_types_supported[oc] + '">' + opconf.response_types_supported[oc] + '</option>');
+						}
+					};
+					
+					openOPSettings();
+                        
+                }).fail(function( jqXHR, textStatus, errorThrown ) {
+                    if (jqXHR.status == "400") {
+                        notie.alert({ type: 'warning', text: '<h3 class="font-weight-bold">WARNING</h3><p>Please Setup OP\'s Preference.</p>' });
+                    } else if (jqXHR.status == "404") {
+                        notie.alert({ type: 'warning', text: '<h3 class="font-weight-bold">WARNING</h3><p>Token Not Found.</p>' });
+                    } else {
+                        showErrorBox(jqXHR);
+                    }
+                }).always(function( ) {
+                    $.LoadingOverlay("hide", true);
+					$(".btn").prop("disabled", false);
+                });
+            };
+
+			
+			$(".settingsBtn").on('click', function (e) {
+				$('#clientIdText').val("");
+				$('#clientSecretText').val("");
+				$('#redirectURLText').val("");
+				$('#scopeText').val("");
+				$('#scopeSelect option').remove();
+				$('#responseTypeText').val("");
+				$('#responseTypeSelect option').remove();
+				$('#authzURLText').val("");
+				$('#tokenURLText').val("");
+				$('#userinfoURLText').val("");
+				$('#revocationURLText').val("");
+				$('#introURLText').val("");
+				$('#otherOptionsTextArea').val("");
+				$('#issuerText').val("");
+				$('#configurationsTextArea').val("");
+				$('#JWKSetTextArea').val("");
+				
+				$(".btn").prop("disabled", true);
+				startOPSettingsFunc(e, function() {$('.opSettingsPanel').animate({height: 'toggle'}, 300); return false;});
+            });
+
+			$("#opSettingsModalSaveBtn").on('click', function (e) {
+                if($('#clientIdText').val() == "" || $('#clientSecretText').val() == "" || $('#scopeText').val() == "" || $('#responseTypeText').val() == "") {
+                    notie.alert({ type: 'warning', text: '<h3 class="font-weight-bold">WARNING</h3><p>Some Required Fields are not entered.</p>' });
+                    return;
+                }
+				$(".btn").prop("disabled", true);
+				$.LoadingOverlay("show");
+				$.ajax({
+					method: "POST",
+					url: "/apis/OPSettings/" + $('#opSettingsModal').data('opid'),
+					dataType: "json",
+					headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
+					data: JSON.stringify({
+						'opId': $('#opSettingsModal').data('opid'),
+						'clientId': $('#clientIdText').val(),
+						'clientSecret': $('#clientSecretText').val(),
+						'redirect_url': $('#redirectURLText').val(),
+						'scope': $('#scopeText').val(),
+						'responseType': $('#responseTypeText').val(),
+						'authorizationEndpoint': $('#authzURLText').val(),
+						'tokenizationEndpoint': $('#tokenURLText').val(),
+						'userinfoEndpoint': $('#userinfoURLText').val(),
+						'revocationEndpoint': $('#revocationURLText').val(),
+						'introspectionEndpoint': $('#introURLText').val(),
+						'options': $('#otherOptionsTextArea').val(),
+						'supportPkce': ($('#supportPkceCheck').prop('checked')) ? 'true' : 'false',
+					}),
+				}).done(function( data, textStatus, jqXHR ) {
+                    notie.alert({ type: 'success', text: 'Saved successful.'});
+					$('.opSettingsPanel').animate({height: 'toggle'}, 300);
+					//$('#opSettingsModal').animate({height: 'toggle'}, 300);
+				}).fail(function( jqXHR, textStatus, errorThrown ) {
+					try{
+						ev = JSON.parse(jqXHR.responseText);
+						notie.alert({ type: 'error', text: '<strong>ERROR</strong>  ' + jqXHR.status + ' ' + jqXHR.statusText + '[ ' + ev.error + ' : ' + ev.error_description + ' ]' });
+					} catch(ex) {
+						notie.alert({ type: 'error', text: '<strong>ERROR</strong>  ' + jqXHR.status + ' ' + jqXHR.statusText });
+					}
+				}).always(function( ) {
+					$.LoadingOverlay("hide", true);
+					$(".btn").prop("disabled", false);
+				});
+			});
+			$("#opSettingsModalCloseBtn").on('click', function (e) {
+				$('.opSettingsPanel').animate({height: 'toggle'}, 300);
+			});
+			$("#scopeAddBtn").on('click', function (e) {
+				if($("#scopeText").val() == "") {
+					$("#scopeText").val($("#scopeSelect option:selected").val());
+				} else {
+					var sc = $("#scopeText").val().split(' ');
+					if($.inArray($("#scopeSelect option:selected").val(), sc) == -1) {
+						sc.push($("#scopeSelect option:selected").val());
+						$("#scopeText").val(sc.join(' '));
+					}
+				}
+			});
+			$("#responseTypeAddBtn").on('click', function (e) {
+				$("#responseTypeText").val($("#responseTypeSelect option:selected").val());
+			});
+		});
+	</script>

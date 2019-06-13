@@ -1,0 +1,117 @@
+    <script type="text/javascript">
+        var displayVerifyResult = function(result) {
+            if (result == true) {
+                return '<i class="material-icons align-middle text-success">done</i>';
+            } else if (result == false) {
+                return '<i class="material-icons align-middle text-danger">error</i>';
+            } else if (result == null) {
+                return '<i class="material-icons align-middle text-secondary">block</i>';
+            } else {
+                return '<span class="text-body">' + result + '</span>';
+            }
+        };
+        $(document).ready(function(){
+            var startGettingTokenFunc = function(e, openTokenModal) {
+                $.LoadingOverlay("show", true);
+                $.ajax({
+                    method: "GET",
+                    url: "/apis/OIDC/Token/" + $(e.currentTarget).data('opid'),
+                    dataType: "json"
+                }).done(function( data, textStatus, jqXHR ) {
+                    $('#tokenModal').data('opid', $(e.currentTarget).data('opid'));
+                    $('.tokenModalOPNameText').text(opSettings[$(e.currentTarget).data('opid')].displayName);
+                    $('#tokenAccessTokenText').val(data.access_token);
+                    $('#tokenExpireDateText').val(data.expireDate);
+                    $('#tokenRefreshTokenText').val(data.refresh_token);
+                    $('#tokenIdTokenTextArea').val(data.id_token_decoded);
+                    
+                    openTokenModal();
+                        
+                }).fail(function( jqXHR, textStatus, errorThrown ) {
+                    if (jqXHR.status == "400") {
+                        notie.alert({ type: 'warning', text: '<h3 class="font-weight-bold">WARNING</h3><p>Please Setup OP\'s Preference.</p>' });
+                    } else if (jqXHR.status == "404") {
+                        notie.alert({ type: 'warning', text: '<h3 class="font-weight-bold">WARNING</h3><p>Token Not Found.</p>' });
+                    } else {
+                        showErrorBox(jqXHR);
+                    }
+                }).always(function( ) {
+                    $.LoadingOverlay("hide", true);
+                    $(".btn").prop("disabled", false);
+                });
+            };
+            
+            $(".tokenModalBtn").on('click', function (e) {
+                $("#tokenModalVerifyBtn").data("opid", $(e.currentTarget).data('opid'));
+                
+                $("#tokenAccessTokenText").val("");
+                $("#tokenExpireDateText").val("");
+                $("#tokenRefreshTokenText").val("");
+                $("#tokenIdTokenTextArea").val("");
+                
+                $("#validationIssResult").empty();
+                $("#validationAudienceResult").empty();
+                $("#validationAzpResult").empty();
+                $("#validationExpResult").empty();
+                $("#validationIatResult").empty();
+                $("#validationNbfResult").empty();
+                $("#validationAlgResult").empty();
+                $("#validationSigResult").empty();
+                $("#validationAtHashResult").empty();
+                
+                $("#tokenModalReturnBtn").hide();
+                $("#tokenModalCloseBtn").show();
+                $("#tokenModalVerifyBtn").show();
+                
+                $("#tokenVerifyBlock").hide();
+                $("#tokenDetailBlock").show();
+                
+                $(".btn").prop("disabled", true);
+                
+                startGettingTokenFunc(e, function() {$('.tokenPanel').animate({height: 'toggle'}, 300); return false;});
+            });
+			$("#tokenModalCloseBtn").on('click', function (e) {
+				$('.tokenPanel').animate({height: 'toggle'}, 300);
+			});
+            
+            var startVerifyIDTokenFunc = function(e, opid, openVerifyModal) {
+                $.LoadingOverlay("show", true);
+                $.ajax({
+                    method: "GET",
+                    url: "/apis/OIDC/Verify/" + opid,
+                    dataType: "json"
+                }).done(function( data, textStatus, jqXHR ) {
+                    $("#validationIssResult").html(displayVerifyResult(data.issMatching));
+                    $("#validationAudienceResult").html(displayVerifyResult(data.audMatching));
+                    $("#validationAzpResult").html(displayVerifyResult(data.azpMatching));
+                    $("#validationExpResult").html(displayVerifyResult(data.expIntegrity));
+                    $("#validationIatResult").html(displayVerifyResult(data.iatIntegrity));
+                    $("#validationNbfResult").html(displayVerifyResult(data.nbfIntegrity));
+                    $("#validationAlgResult").html(displayVerifyResult(data.sigAlg));
+                    $("#validationAlgTypeResult").html(displayVerifyResult(data.sigType));
+                    $("#validationSigResult").html(displayVerifyResult(data.sigVerify));
+                    $("#validationAtHashResult").html(displayVerifyResult(data.sigATHash));
+                    
+                    openVerifyModal();
+                        
+                }).fail(function( jqXHR, textStatus, errorThrown ) {
+                    if (jqXHR.status == "400") {
+                        notie.alert({ type: 'warning', text: '<h3 class="font-weight-bold">WARNING</h3><p>Please Setup OP\'s Preference.</p>' });
+                    } else {
+                        showErrorBox(jqXHR);
+                    }
+                }).always(function( ) {
+                    $.LoadingOverlay("hide", true);
+                    $(".btn").prop("disabled", false);
+                });
+            };
+            $("#tokenModalVerifyBtn").on('click', function (e) {
+                $(".btn").prop("disabled", true);
+                startVerifyIDTokenFunc(e, $(e.currentTarget).data('opid'), function() {$('.contentBox').animate({height: 'toggle'}, 300); $('.verifyBtn').animate({height: 'toggle'}, 0); return false;});
+            });
+            $("#tokenModalReturnBtn").on('click', function (e) {
+                $('.verifyBtn').animate({width: 'toggle'}, 0);
+                $('.contentBox').animate({height: 'toggle'}, 300);
+            });
+        });
+    </script>

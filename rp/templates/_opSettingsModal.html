@@ -1,0 +1,136 @@
+	<div class="container opSettingsPanel mt-5" id="opSettingsModal" style="display: none;">
+		<div class="modal-header">
+			<div class="text-center w-100">
+			    <h2>OP Preference</h2>
+			    <h3 id="opNameText">(OP Name)</h3>
+			</div>
+		</div>
+		<div class="modal-body" data-spy="scroll" data-offset="0">
+			<form id="opSettingsModalForm">
+				<ul class="nav nav-tabs nav-fill" id="opSettingsTab" role="tablist">
+					<li class="nav-item">
+					  <a class="nav-link active" id="requiredTab" data-toggle="tab" href="#requirdTabPanel" role="tab" aria-controls="requirdTabPanel" aria-selected="true">Required</a>
+					</li>
+					<li class="nav-item">
+					  <a class="nav-link" id="optionalTab" data-toggle="tab" href="#optionalTabPanel" role="tab" aria-controls="optionalTabPanel" aria-selected="false">Optional</a>
+					</li>
+					<li class="nav-item">
+					  <a class="nav-link" id="configurationsTab" data-toggle="tab" href="#configurationsTabPanel" role="tab" aria-controls="configurationsTabPanel" aria-selected="false">Configuration</a>
+					</li>
+				</ul>
+				<div class="tab-content" id="requirdTabContent">
+					<div class="tab-pane fade show active" id="requirdTabPanel" role="tabpanel" aria-labelledby="requiredTab">
+						<div class="form-group">
+							<label for="clientIdText">Client ID</label>
+							<input type="text" class="form-control" id="clientIdText" aria-describedby="clientIdHelp" placeholder="(Required) Enter Your Client ID" required="true">
+						</div>
+						<div class="form-group">
+							<label for="clientSecretText">Client Secret</label>
+							<input type="text" class="form-control" id="clientSecretText" aria-describedby="clientSecretHelp" placeholder="(Required) Enter Your Client Secret">
+							<small id="clientSecretHelp" class="form-text text-muted">* ClientSecret is always masked shown.</small>
+						</div>
+						<div class="form-group">
+							<label for="redirectURLText">Redirect URL</label>
+							<input type="text" class="form-control" id="redirectURLText" aria-describedby="redirectURLHelp" placeholder="(Required) Enter Redirect URL" readonly>
+							<small id="clientSecretHelp" class="form-text text-muted">Redirect URL is fixed, can not change.</small>
+						</div>
+						<div class="form-row">
+							<label class="col-12 col-md-12" for="scopeText">Scope</label>
+							<div class="form-group col-8 col-md-8">
+								<input type="text" class="form-control" id="scopeText" aria-describedby="scopeHelp" placeholder="(Required) Enter scope values">
+							</div>
+							<div class="form-group col-auto col-md-auto">
+								<button id="scopeAddBtn" type="button" class="btn btn-info"><i class="material-icons align-middle ">arrow_back_ios</i></button>
+							</div>
+							<div class="form-group col col-md">
+								<select id="scopeSelect" class="form-control">
+									<option></option>
+								</select>
+							</div>
+							<small id="scopeHelp" class="col-12 col-md-12 form-text text-muted">Multi values must be separated by space. At least 'openid' is specified, If nothing inputed.</small>
+						</div>
+						<div class="form-row">
+							<label class="col-12 col-md-12" for="responseTypeText">Response Type</label>
+							<div class="form-group col-8 col-md-8">
+								<input type="text" class="form-control" id="responseTypeText" aria-describedby="responseTypeHelp" placeholder="(Required) Enter Response Type">
+							</div>
+							<div class="form-group col-auto col-md-auto">
+								<button id="responseTypeAddBtn" type="button" class="btn btn-info"><i class="material-icons align-middle ">arrow_back_ios</i></button>
+							</div>
+							<div class="form-group col col-md">
+								<select id="responseTypeSelect" class="form-control">
+									<option></option>
+								</select>
+							</div>
+							<small id="responseTypeHelp" class="col-12 col-md-12 form-text text-muted">Multi values must be separated by space. (e.g.) "code id_token" "code token". Default value is "code id_token".</small>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="optionalTabPanel" role="tabpanel" aria-labelledby="optionalTab">
+						<p class="form-text text-center">If the followings is not set, Configurations values is used.</p>
+						<div class="form-group">
+							<label for="authzURLText">Authorization Endpoint</label>
+							<input type="text" class="form-control" id="authzURLText" aria-describedby="authzURLHelp" placeholder="Enter Authorization URL">
+						</div>
+						<div class="form-group">
+							<label for="tokenURLText">Tokenization Endpoint</label>
+							<input type="text" class="form-control" id="tokenURLText" aria-describedby="tokenURLHelp" placeholder="Enter Tokenization URL">
+						</div>
+						<div class="form-group">
+							<label for="userinfoURLText">UserInfo Endpoint</label>
+							<input type="text" class="form-control" id="userinfoURLText" aria-describedby="userinfoURLHelp" placeholder="Enter UserInfo URL">
+						</div>
+						<div class="form-group">
+							<label for="revocationURLText">Revocation Endpoint</label>
+							<input type="text" class="form-control" id="revocationURLText" aria-describedby="revocationURLHelp" placeholder="Enter Revocation URL">
+						</div>
+						<div class="form-group">
+							<label for="introURLText">Introspection Endpoint</label>
+							<input type="text" class="form-control" id="introURLText" aria-describedby="introURLHelp" placeholder="Enter Introspection URL">
+						</div>
+						<div class="form-group">
+							<label for="otherOptionsTextArea">Option Parameters on Authorization</label>
+							<textarea class="form-control" id="otherOptionsTextArea" rows="5"></textarea>
+							<small id="otherOptionsHelp" class="form-text text-muted">Format is "Name=Value". Each option is per row.</small>
+						</div>
+						<div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="supportPkceCheck" id="supportPkceCheck" checked>
+                            <label class="form-check-label" for="supportPkceCheck">Support PKCE</label>
+                        </div>
+					</div>
+					<div class="tab-pane fade" id="configurationsTabPanel" role="tabpanel" aria-labelledby="configurationsTab">
+						<div class="form-group">
+							<label for="issuerText">Issuer or OP Configuration URL</label>
+							<input type="text" class="form-control" id="issuerText" placeholder="(Required) Enter Issuer or OP Configuration URL" readonly="true">
+							<small id="issuerHelp" class="form-text text-muted">Issuer and OIDC Configurations is fixed, can not change.</small>
+						</div>
+						<ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+							<li class="nav-item">
+							  <a class="nav-link active" id="configurationDocumentTab" data-toggle="tab" href="#configurationDocumentTabPanel" role="tab" aria-controls="configurationDocumentTabPanel" aria-selected="true">Document</a>
+							</li>
+							<li class="nav-item">
+							  <a class="nav-link" id="configurationJWKSetTab" data-toggle="tab" href="#configurationJWKSetTabPanel" role="tab" aria-controls="configurationJWKSetTabPanel" aria-selected="false">JWK Set</a>
+							</li>
+						</ul>
+						<div class="tab-content" id="configurationDocumentTabContent">
+							<div class="tab-pane fade show active" id="configurationDocumentTabPanel" role="tabpanel" aria-labelledby="configurationDocumentTab">
+								<div class="form-group">
+									<label for="configurationsTextArea">Text</label>
+									<textarea class="form-control" id="configurationsTextArea" rows="15" readonly="true"></textarea>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="configurationJWKSetTabPanel" role="tabpanel" aria-labelledby="configurationJWKSetTab">
+								<div class="form-group">
+									<label for="JWKSetTextArea">Text</label>
+									<textarea class="form-control" id="JWKSetTextArea" rows="15" readonly="true"></textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+		  <button id="opSettingsModalCloseBtn" type="button" class="btn btn-secondary">Close</button>
+		  <button id="opSettingsModalSaveBtn" type="button" class="btn btn-primary">Save changes</button>
+		</div>
+	</div>
