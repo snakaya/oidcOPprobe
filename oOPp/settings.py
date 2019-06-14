@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'oidcOPprobe.urls'
+ROOT_URLCONF = 'oOPp.urls'
 
 TEMPLATES = [
     {
@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'oidcOPprobe.wsgi.application'
+WSGI_APPLICATION = 'oOPp.wsgi.application'
 
 
 # Database
