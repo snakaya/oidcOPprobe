@@ -47,7 +47,7 @@ $ workon oopp-py3
 (oopp-py3) $ pip install -r requirements-py3.txt
 ```
 
-5.Please modify settings.py.
+5.Please setup settings.py. Set SECRET_KEY and modify DATABASES.
 
 6.Setup Database.
 
@@ -82,9 +82,6 @@ TODO
 -[ ] Containerization.
 
 -[ ] Make setup.py.
-
--[ ] Containerization.
-
 
 ## License
 [MIT](https://raw.githubusercontent.com/snakaya/WebAuthn-PyRP/master/LICENSE)
