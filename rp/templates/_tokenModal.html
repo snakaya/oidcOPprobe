@@ -1,114 +1,120 @@
     <div class="container tokenPanel mt-5" id="tokenModal" style="display: none;">
-	<div id="tokenDetailBlock" class="contentBox">
-		<div class="text-center w-100">
-		    <h1>OIDC/OAuth2 Token Info</h1>
-		    <h2 class="tokenModalOPNameText">(OP Name)</h2>
+		<div id="tokenDetailBlock" class="contentBox">
+			<div class="text-center w-100">
+				<h1>OIDC/OAuth2 Token Info</h1>
+			</div>
+			<div class="modal-header">
+				<h2 class="tokenModalOPNameText">(OP Name)</h2>
+				<button type="button" class="btn btn-secondary tokenModalCloseBtn">Close</button>
+			</div>
+			<form id="tokenDetailForm">
+				<div class="form-group">
+				<label for="tokenAccessTokenText">Access Token</label>
+				<input type="text" class="form-control bg-light" id="tokenAccessTokenText" aria-describedby="tokenAccessTokenHelp" readonly="true">
+				</div>
+				<div class="form-group">
+				<label for="tokenExpireDateText">Expire Date</label>
+				<input type="text" class="form-control bg-light" id="tokenExpireDateText" aria-describedby="tokenExpireDateHelp" readonly="true">
+				</div>
+				<div class="form-group">
+				<label for="tokenRefreshTokenText">Refresh Token</label>
+				<input type="text" class="form-control bg-light" id="tokenRefreshTokenText" aria-describedby="tokenRefreshTokenHelp" readonly="true">
+				</div>
+				<div class="form-group">
+				<label for="tokenIdTokenTextArea">ID Token</label>
+				<textarea class="form-control bg-light" id="tokenIdTokenTextArea" rows="10" aria-label="ID Token" readonly="true"></textarea>
+				</div>
+			</form>
 		</div>
-		<form id="tokenDetailForm">
-		    <div class="form-group">
-			<label for="tokenAccessTokenText">Access Token</label>
-			<input type="text" class="form-control bg-light" id="tokenAccessTokenText" aria-describedby="tokenAccessTokenHelp" readonly="true">
-		    </div>
-		    <div class="form-group">
-			<label for="tokenExpireDateText">Expire Date</label>
-			<input type="text" class="form-control bg-light" id="tokenExpireDateText" aria-describedby="tokenExpireDateHelp" readonly="true">
-		    </div>
-		    <div class="form-group">
-			<label for="tokenRefreshTokenText">Refresh Token</label>
-			<input type="text" class="form-control bg-light" id="tokenRefreshTokenText" aria-describedby="tokenRefreshTokenHelp" readonly="true">
-		    </div>
-		    <div class="form-group">
-			<label for="tokenIdTokenTextArea">ID Token</label>
-			<textarea class="form-control bg-light" id="tokenIdTokenTextArea" rows="10" aria-label="ID Token" readonly="true"></textarea>
-		    </div>
-		</form>
-	</div>
-	<div id="tokenVerifyBlock" class="contentBox table-responsive" style="display: none;">
-	    <div class="text-center w-100">
-	        <h1>ID Token Validation</h1>
-	        <h2 class="tokenModalOPNameText">(OP Name)</h2>
-	    </div>
-	    <table class="table">
-		<caption class="font-italic text-muted">Reference: <a href="http://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">OpenID Connect Core 1.0 [3.1.3.7.]</a></caption>
-		<thead class="thead-light">
-		    <tr>
-			<th scope="col">#</th>
-			<th scope="col">Validation Claim</th>
-			<th scope="col">Result</th>
-		    </tr>
-		</thead>
-		<tbody>
-		    <tr>
-			<th scope="row">1</th>
-			<td><p><strong>Encrypted ID Token</strong></p></td>
-			<td><p>Ignored</p></td>
-		    </tr>
-		    <tr>
-			<th scope="row">2</th>
-			<td><p><strong>iss Matching</strong></p></td>
-			<td><p id="validationIssResult"></p></td>
-		    </tr>
-		    <tr>
-			<th scope="row">3</th>
-			<td><p><strong>aud Matching</strong></p></td>
-			<td><p id="validationAudienceResult"></p></td>
-		    </tr>
-		    <tr>
-			<th scope="row">4</th>
-			<td><p><strong>azp Matching</strong></p></td>
-			<td><p id="validationAzpResult"></p></td>
-		    </tr>
-		    <tr>
-			<th scope="row">5</th>
-			<td><p><strong>exp Integrity</strong></p></td>
-			<td><p id="validationExpResult"></p></td>
-		    </tr>
-		    <tr>
-			<th scope="row">6</th>
-			<td><p><strong>iat Integrity</strong></p></td>
-			<td><p id="validationIatResult"></p></td>
-		    </tr>
-		    <tr>
-			<th scope="row">7</th>
-			<td><p><strong>nbf Integrity</strong></p></td>
-			<td><p id="validationNbfResult"></p></td>
-		    </tr>
-		    <tr>
-			<th scope="row">8</th>
-			<td><p><strong>auth_time Integrity</strong></p></td>
-			<td><p>Ignored</p></td>
-		    </tr>
-		    <tr>
-			<th scope="row">9</th>
-			<td><p><strong>Signature Algorithm</strong></p></td>
-			<td><p id="validationAlgResult"></p><p id="validationAlgTypeResult"></p></td>
-		    </tr>
-		    <tr>
-			<th scope="row">10</th>
-			<td><p><strong>Signature Validation</strong></p></td>
-			<td><p id="validationSigResult"></p></td>
-		    </tr>
-		    <tr>
-			<th scope="row">11</th>
-			<td><p><strong>at_hash Validation</strong></p></td>
-			<td><p id="validationAtHashResult"></p></td>
-		    </tr>
-		    <tr>
-			<th scope="row">12</th>
-			<td><p><strong>nonce Unity</strong></p></td>
-			<td><p>Ignored</p></td>
-		    </tr>
-		    <tr>
-			<th scope="row">13</th>
-			<td><p><strong>acr Tolerance</strong></p></td>
-			<td><p>Ignored</p></td>
-		    </tr>
-		</tbody>
-	    </table>
-	</div>
-	<div class="modal-footer">
-	    <button id="tokenModalCloseBtn" type="button" class="btn btn-secondary">Close</button>
-	    <button id="tokenModalVerifyBtn" type="button" class="btn btn-info verifyBtn" data-opid=""><i class="material-icons align-middle ">verified_user</i>Verify ID Token</button>
-        <button id="tokenModalReturnBtn" type="button" class="btn btn-outline-info verifyBtn" style="display: none;"><i class="material-icons align-middle ">arrow_back</i>Return to Info</button>
-	</div>
+		<div id="tokenVerifyBlock" class="contentBox table-responsive" style="display: none;">
+			<div class="text-center w-100">
+				<h1>ID Token Validation</h1>
+			</div>
+			<div class="modal-header">
+				<h2 class="tokenModalOPNameText">(OP Name)</h2>
+				<button type="button" class="btn btn-secondary tokenModalCloseBtn">Close</button>
+			</div>
+			<table class="table">
+			<caption class="font-italic text-muted">Reference: <a href="http://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">OpenID Connect Core 1.0 [3.1.3.7.]</a></caption>
+			<thead class="thead-light">
+				<tr>
+				<th scope="col">#</th>
+				<th scope="col">Validation Claim</th>
+				<th scope="col">Result</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+				<th scope="row">1</th>
+				<td><p><strong>Encrypted ID Token</strong></p></td>
+				<td><p>Ignored</p></td>
+				</tr>
+				<tr>
+				<th scope="row">2</th>
+				<td><p><strong>iss Matching</strong></p></td>
+				<td><p id="validationIssResult"></p></td>
+				</tr>
+				<tr>
+				<th scope="row">3</th>
+				<td><p><strong>aud Matching</strong></p></td>
+				<td><p id="validationAudienceResult"></p></td>
+				</tr>
+				<tr>
+				<th scope="row">4</th>
+				<td><p><strong>azp Matching</strong></p></td>
+				<td><p id="validationAzpResult"></p></td>
+				</tr>
+				<tr>
+				<th scope="row">5</th>
+				<td><p><strong>exp Integrity</strong></p></td>
+				<td><p id="validationExpResult"></p></td>
+				</tr>
+				<tr>
+				<th scope="row">6</th>
+				<td><p><strong>iat Integrity</strong></p></td>
+				<td><p id="validationIatResult"></p></td>
+				</tr>
+				<tr>
+				<th scope="row">7</th>
+				<td><p><strong>nbf Integrity</strong></p></td>
+				<td><p id="validationNbfResult"></p></td>
+				</tr>
+				<tr>
+				<th scope="row">8</th>
+				<td><p><strong>auth_time Integrity</strong></p></td>
+				<td><p>Ignored</p></td>
+				</tr>
+				<tr>
+				<th scope="row">9</th>
+				<td><p><strong>Signature Algorithm</strong></p></td>
+				<td><p id="validationAlgResult"></p><p id="validationAlgTypeResult"></p></td>
+				</tr>
+				<tr>
+				<th scope="row">10</th>
+				<td><p><strong>Signature Validation</strong></p></td>
+				<td><p id="validationSigResult"></p></td>
+				</tr>
+				<tr>
+				<th scope="row">11</th>
+				<td><p><strong>at_hash Validation</strong></p></td>
+				<td><p id="validationAtHashResult"></p></td>
+				</tr>
+				<tr>
+				<th scope="row">12</th>
+				<td><p><strong>nonce Unity</strong></p></td>
+				<td><p>Ignored</p></td>
+				</tr>
+				<tr>
+				<th scope="row">13</th>
+				<td><p><strong>acr Tolerance</strong></p></td>
+				<td><p>Ignored</p></td>
+				</tr>
+			</tbody>
+			</table>
+		</div>
+		<div class="modal-footer">
+			<button id="tokenModalVerifyBtn" type="button" class="btn btn-info verifyBtn" data-opid=""><i class="material-icons align-middle ">verified_user</i>Verify ID Token</button>
+			<button id="tokenModalReturnBtn" type="button" class="btn btn-outline-info verifyBtn" style="display: none;"><i class="material-icons align-middle ">arrow_back</i>Return to Info</button>
+			<button type="button" class="btn btn-secondary tokenModalCloseBtn">Close</button>
+		</div>
     </div>

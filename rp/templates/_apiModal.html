@@ -1,8 +1,11 @@
 	<div class="container apiPanel mt-5" id="apiModal" style="display: none;">
 		<div class="text-center w-100">
 			<h1>Calling <strong id="apiModalAPINameText">(API Name)</strong> API</h1>
-			<h2 id="apiModalOPNameText">(OP Name)</h2>
-		</div>
+        </div>
+        <div class="modal-header">
+            <h2 id="apiModalOPNameText">(OP Name)</h2>
+            <button type="button" class="btn btn-secondary apiModalCloseBtn">Close</button>
+        </div>
         <div id="APIMmainContainer" class="container clearfix mt-1">
             <form id="apiForm">
                 <h3 class="text-center bg-light text-secondary my-1">Parameters</h3>
@@ -92,6 +95,6 @@
             </form>
         </div>
         <div class="modal-footer">
-            <button id="apiModalCloseBtn" type="button" class="btn btn-secondary">Close</button>
+            <button type="button" class="btn btn-secondary apiModalCloseBtn">Close</button>
         </div>
     </div>

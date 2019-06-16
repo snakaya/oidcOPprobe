@@ -4,7 +4,10 @@
                 <p class="lead">Step By Step, Authorization and Tokenization TimeLine.</p>
             </div>
             <div id="AMmainContainer" class="container clearfix">
-                <h2>Flow Type : <strong id="authzModalFlowTypeText" class="">(Flow Type)</strong></h2>
+                <div class="modal-header">
+                    <h2>Flow Type : <strong id="authzModalFlowTypeText" class="">(Flow Type)</strong></h2>
+                    <button type="button" class="btn btn-secondary authzModalCloseBtn">Close</button>
+                </div>
                 <form id="timeLineForm">
                     <div id="authzModalAuthzURL" class="my-1">
                         <h3 class="text-center bg-light text-secondary">1. Generated Authorization URL</h3>
@@ -115,6 +118,6 @@
                 </form>
             </div>
 	    <div class="modal-footer">
-		  <button id="authzModalCloseBtn" type="button" class="btn btn-secondary">Close</button>
+		  <button type="button" class="btn btn-secondary authzModalCloseBtn">Close</button>
 	    </div>
         </div>
