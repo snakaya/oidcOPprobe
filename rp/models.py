@@ -287,8 +287,8 @@ class OIDCClient(object):
 		try:
 			if not idToken or idToken is None:
 				raise ParamError('idToken')
-			_, message, _ = idToken.split('.')
-			message += '=' * (len(message) % 4)
+			messages = idToken.split('.')
+			message = messages[1] + ('=' * (len(messages[1]) % 4))
 			ret = json.dumps(json.loads(base64url_decode(message.encode())), indent=2).encode().decode('unicode-escape')
 			
 			return ret
