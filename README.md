@@ -13,7 +13,7 @@ Probe RP for communications with OP in OpenID Connect/OAuth2.
 
 ## Requirement
 
-- Python2.7 + Django ==1.11、or Python3.6 + Django >=1.11/2.2。
+- Python2.7 + Django ==1.11 or Python3.6 + Django >=2.2
 - MySQL, PostgreSQL, Oracle or SQLite
 
 ## Installation
