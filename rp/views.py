@@ -465,7 +465,7 @@ def oidc_revocation(request, opid):
 			c = pref.getSpecificationAPIBasicConf('Revocation')
 		except Exception as exp:
 			logger.error('[oidc_revocation] ' + str(exp))
-			return HttpResponse('{"status": "OTHERERR", "message" : "[oidc_refresh] Error: ' + str(exp) + ' "}', content_type="application/json", status=500)
+			return HttpResponse('{"status": "OTHERERR", "message" : "[oidc_revocation] Error: ' + str(exp) + ' "}', content_type="application/json", status=500)
 		
 		if (len(c) == 0):
 			return HttpResponse('{"status": "APPERR", "message" : "The OP seems to not provide Revocation API."}', content_type="application/json", status=400)
@@ -553,7 +553,98 @@ def oidc_revocation(request, opid):
 
 @csrf_exempt
 def oidc_introspection(request, opid):
-	return HttpResponse('{"status": "OTHERERR", "message" : "Not Implement Yet."}', content_type="application/json", status=400)
+	if not opid or opid is None:
+		return HttpResponse('{"status": "PARAMERR", "message" : "Parameters(opid) Error."}', content_type="application/json", status=400)
+	
+	if(request.method == 'GET'):
+		c = {}
+
+		try:
+			pref = OIDCPreference(opid)
+			if not pref.checkRequired():
+				return HttpResponse('{"status": "REQUIEDERR", "message" : "Required Values Error."}', content_type="application/json", status=400)
+		except Exception as exp:
+			logger.error('[oidc_introspection] ' + str(exp))
+			return HttpResponse('{"status": "PREFERR", "message" : "OPPreference Error: ' + str(exp) + ' "}', content_type="application/json", status=500)
+		
+		try:
+			c = pref.getSpecificationAPIBasicConf('Introspection')
+			logger.debug(c)
+		except Exception as exp:
+			logger.error('[oidc_introspection] ' + str(exp))
+			return HttpResponse('{"status": "OTHERERR", "message" : "[oidc_introspection] Error: ' + str(exp) + ' "}', content_type="application/json", status=500)
+		
+		if (len(c) == 0):
+			return HttpResponse('{"status": "APPERR", "message" : "The OP seems to not provide Introspection API."}', content_type="application/json", status=400)
+		
+		try:
+			tokenstore = OIDCTokenStore(opid, request.session)
+			accessToken = tokenstore.getAccessToken()
+			refreshToken = tokenstore.getRefreshToken()
+		except Exception as exp:
+			logger.error('[oidc_introspection] ' + str(exp))
+			return HttpResponse('{"status": "TOKENERR", "message" : "Token Get Error."}', content_type="application/json", status=500)
+		
+		if accessToken is None:
+			return HttpResponse('{"status": "TOKENERR", "message" : "AccessToken Not Found."}', content_type="application/json", status=400)
+		
+		tokenParams = {}
+		oidc = OIDCClient(opid)
+		try:
+			_, query = oidc.getIntrospectionParams(introspectionEndpoint=c['apiEndPoint'], accessToken=accessToken, args={})
+			tokenParams['access_token'] = str(query)
+
+			if refreshToken is not None:
+				url, query = oidc.getIntrospectionParams(introspectionEndpoint=c['apiEndPoint'], refreshToken=refreshToken, args={})
+				tokenParams['refresh_token'] = str(query)
+		except Exception as exp:
+			logger.error('[oidc.getIntrospectionParams] ' + str(exp))
+			return HttpResponse('{"status": "OTHERERR", "message" : "[oidc.getIntrospectionParams] Error: ' + str(exp) + ' "}', content_type="application/json", status=500)
+		
+		c['tokenParams'] = tokenParams
+
+		return HttpResponse(json.dumps(c), content_type="application/json", status=200)
+	
+	elif(request.method == 'POST'):
+		c = {}
+
+		try:
+			p = json.loads(request.body)
+			if('apiEndPoint' not in p.keys()):
+				return HttpResponse('{"status": "PARAMERR", "message" : "apiEndPoint is missing."}', content_type="application/json", status=400)
+			if('authorizationHeader' not in p.keys()):
+				return HttpResponse('{"status": "PARAMERR", "message" : "authorizationHeader is missing."}', content_type="application/json", status=400)
+			if('method' not in p.keys()):
+				return HttpResponse('{"status": "PARAMERR", "message" : "method is missing."}', content_type="application/json", status=400)
+			if('contentType' not in p.keys()):
+				return HttpResponse('{"status": "PARAMERR", "message" : "contentType is missing."}', content_type="application/json", status=400)
+			if('tokenType' not in p.keys()):
+				return HttpResponse('{"status": "PARAMERR", "message" : "tokenType is missing."}', content_type="application/json", status=400)
+			if('params' not in p.keys()):
+				return HttpResponse('{"status": "PARAMERR", "message" : "params is missing."}', content_type="application/json", status=400)
+		except Exception as exp:
+			logger.error('[oidc_introspection] ' + str(exp))
+			return HttpResponse('{"status": "PARAMERR", "message" : "Parameters Error."}', content_type="application/json", status=500)
+		
+		try:
+			pref = OIDCPreference(opid)
+			if not pref.checkRequired():
+				return HttpResponse('{"status": "REQUIEDERR", "message" : "Required Values Error."}', content_type="application/json", status=400)
+		except Exception as exp:
+			logger.error('[oidc_introspection] ' + str(exp))
+			return HttpResponse('{"status": "PREFERR", "message" : "OPPreference Error: ' + str(exp) + ' "}', content_type="application/json", status=500)
+
+		oidc = OIDCClient(opid)
+		
+		try:
+			c = oidc.commonApi(method=p['method'], apiUrl=p['apiEndPoint'], clientId=pref.getClientId(), clientSecret=pref.getClientSecret(), contentType=p['contentType'], authorizationType=p['authorizationHeader'], payload=p['params'])
+		except Exception as exp:
+			logger.error('[oidc_introspection] ' + str(exp))
+			return HttpResponse('{"status": "CALLAPIERR", "message" : "Introspection Calling Error: ' + str(exp) + ' "}', content_type="application/json", status=500)
+
+		return HttpResponse(json.dumps(c), content_type="application/json", status=200)
+	else:
+		return HttpResponse('{"status": "METHODERR", "message" : "Other Error."}', content_type="application/json", status=500)
 
 @csrf_exempt
 def oidc_custom(request, opid):

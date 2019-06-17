@@ -36,11 +36,7 @@
                         
                 }).fail(function( jqXHR, textStatus, errorThrown ) {
                     if (jqXHR.status == "400") {
-                        if ($(e.currentTarget).data('apitype') == 'Introspection') {
-                            notie.alert({ type: 'warning', text: '<h3 class="font-weight-bold">WARNING</h3><p>Introspection is not servicing yet.</p>' });
-                        } else {
-                            notie.alert({ type: 'warning', text: '<h3 class="font-weight-bold">WARNING</h3><p>Please Setup OP\'s Preference.</p>' });
-                        }
+                        notie.alert({ type: 'warning', text: '<h3 class="font-weight-bold">WARNING</h3><p>Please Setup OP\'s Preference.</p>' });
                     } else if (jqXHR.status == "404") {
                         notie.alert({ type: 'warning', text: '<h3 class="font-weight-bold">WARNING</h3><p>Please Setup API Endpoint into OP\'s Preference.</p>' });
                     } else {
@@ -61,7 +57,7 @@
                     'contentType': $('#apiContentTypeSelect option:selected').val(),
                     'params': $('#apiParamsTextArea').val(),
 				};
-                if($(e.currentTarget).data('apitype') == 'Revocation') {
+                if($(e.currentTarget).data('apitype') == 'Revocation' || $(e.currentTarget).data('apitype') == 'Introspection') {
                     postdata['tokenType'] = $('#apiTokenTypeSelect option:selected').val();
                 }
                 $.ajax({

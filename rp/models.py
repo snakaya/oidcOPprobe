@@ -534,8 +534,6 @@ class OIDCPreference(object):
 		
 		try:
 			configEndPoint = self.__getConfigurationValByKey(keyMap['specAPIs'][apiname]['configName'])
-			if configEndPoint is None:
-				return None
 		except Exception as exp:
 			raise
 		
