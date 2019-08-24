@@ -83,19 +83,19 @@ RDB_NAME = os.path.join(BASE_DIR, 'db.sqlite3')
 # RDB_USER = "<DB User Name>"
 # RDB_PASS = "<DB User Password>"
 # RDB_SERVER = "<DB Server Name or IP Address>"
-DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.sqlite3',  # SQLite3
+#DATABASES = {
+#	'default': {
+#		'ENGINE': 'django.db.backends.sqlite3',  # SQLite3
 # 		'ENGINE': 'django.db.backends.mysql',  # MySQL
 #       'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL
 #       'ENGINE': 'django.db.backends.oracle',  # Oracle
-		'NAME': RDB_NAME,
+#		'NAME': RDB_NAME,
 # 		'USER': RDB_USER,
 # 		'PASSWORD': RDB_PASS,
 # 		'HOST': RDB_SERVER,
 # 		'PORT': '',
-	}
-}
+#	}
+#}
 
 
 # Password validation
