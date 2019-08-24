@@ -18,8 +18,8 @@ from django.conf import settings
 from rp.models import *
 
 
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+logging.config.dictConfig(settings.LOGGING)
+logger = logging.getLogger("oOPp")
 
 #
 # Pages

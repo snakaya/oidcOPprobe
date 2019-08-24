@@ -65,8 +65,8 @@ class OPConfigurations(models.Model):
 #
 #
 
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+logging.config.dictConfig(settings.LOGGING)
+logger = logging.getLogger("oOPp")
 
 keyMap = {
 	'methods' : {

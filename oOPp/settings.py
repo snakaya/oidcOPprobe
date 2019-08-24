@@ -78,7 +78,7 @@ TEMPLATES = [
 # HTTP 500 error. Depending on DEBUG, all other log records are either sent to
 # the console (DEBUG=True) or discarded (DEBUG=False) by means of the
 # require_debug_true filter.
-DEFAULT_LOGGING = {
+LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'filters': {
