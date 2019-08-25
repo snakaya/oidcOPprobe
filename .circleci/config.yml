@@ -2,18 +2,18 @@
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
-version: 2.1
+version: 2
 
 jobs:
   build:
     docker:
-      - image: circleci/mysql:5.7
       - image: circleci/python:3.7
         environment:
           OOPP_DB_NAME: ''
           OOPP_DB_HOST: '127.0.0.1'
           OOPP_DB_USERID: 'root'
           OOPP_DB_PASSWORD: ''
+      - image: circleci/mysql:5.7
     working_directory: ~/repo
 
     steps:
@@ -54,7 +54,7 @@ jobs:
 
 
 workflows:
-  version: 2.1
-  build-and-test:
+  version: 2
+  workflow:
     jobs:
       - build
