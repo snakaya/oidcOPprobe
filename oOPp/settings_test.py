@@ -163,8 +163,11 @@ STATICFILES_FINDERS = (
 # django-nose, coverage configure
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_ARGS = [
+    '--verbosity=2',  # verbose output
+    '--with-xunit',  # enable XUnit plugin
+    '--xunit-file=xunittest.xml',  # the XUnit report file
     '--with-coverage',
-    '--cover-html',
+    #'--cover-html',
     '--cover-package=rp',
 ]
 
