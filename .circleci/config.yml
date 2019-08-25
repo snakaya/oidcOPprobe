@@ -48,8 +48,11 @@ jobs:
             . venv/bin/activate
             python manage.py test --settings oOPp.settings_test
 
+      - store_test_results:
+          path: ~/oopp_testresult
+      
       - store_artifacts:
-          path: test-reports
+          path: ~/oopp_testresult
           destination: test-reports
 
 
