@@ -45,15 +45,15 @@ jobs:
       - run:
           name: run tests
           command: |
-            mkdir -p ~/oopp_testresult
+            mkdir -p ./oopp_testresult
             . venv/bin/activate
             python manage.py test --settings oOPp.settings_test
 
       - store_test_results:
-          path: ~/oopp_testresult
+          path: ./oopp_testresult
       
       - store_artifacts:
-          path: ~/oopp_testresult
+          path: ./oopp_testresult
 
 
 workflows:
