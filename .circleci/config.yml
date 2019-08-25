@@ -44,12 +44,15 @@ jobs:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements-py3.txt" }}
 
+  test:
+    executor: shared-python-executor
+    requires:
+      - build
+    steps:
       - run:
           name: wait for db
           command: 'dockerize -wait tcp://127.0.0.1:3306 -timeout 120s'
-  test:
-    executor: shared-python-executor
-    steps:
+      
       - run:
           name: run tests
           command: |
