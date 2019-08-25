@@ -5,7 +5,7 @@
 version: 2.1
 
 executors:
-  shared-executor:
+  shared-python-executor:
     docker:
       - image: circleci/python:3.7
         environment:
@@ -13,14 +13,15 @@ executors:
           OOPP_DB_HOST: '127.0.0.1'
           OOPP_DB_USERID: 'root'
           OOPP_DB_PASSWORD: ''
-      - image: circleci/mysql:5.7
-
     working_directory: ~/repo
+  shared-mysql-executor:
+    docker:
+      - image: circleci/mysql:5.7
 
 
 jobs:
   build:
-    executor: shared-executor
+    executor: shared-python-executor
     steps:
       - checkout
 
@@ -47,7 +48,7 @@ jobs:
           name: wait for db
           command: 'dockerize -wait tcp://127.0.0.1:3306 -timeout 120s'
   test:
-    executor: shared-executor
+    executor: shared-python-executor
     steps:
       - run:
           name: run tests
