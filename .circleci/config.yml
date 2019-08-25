@@ -48,7 +48,7 @@ jobs:
       - run:
           name: wait for db
           command: 'dockerize -wait tcp://127.0.0.1:3306 -timeout 120s'
-
+  test:
       # run tests!
       # this example uses Django's built-in test-runner
       # other common Python testing frameworks include pytest and nose
@@ -63,3 +63,10 @@ jobs:
       - store_artifacts:
           path: test-reports
           destination: test-reports
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build
+      - test
