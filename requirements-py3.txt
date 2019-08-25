@@ -1,5 +1,6 @@
 certifi>=2018.8.24
 chardet>=3.0.4
+coverage>=4.5.4
 Django>=2.2
 django-nose>=1.4.6
 ecdsa>=0.13
