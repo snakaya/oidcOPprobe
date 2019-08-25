@@ -167,7 +167,7 @@ NOSE_ARGS = [
     '--with-xunit',  # enable XUnit plugin
     '--xunit-file=oopp_testresult/xunittest.xml',  # the XUnit report file
     '--with-coverage',
-    #'--cover-html',
+    '--cover-html',
     '--cover-package=rp',
 ]
 
