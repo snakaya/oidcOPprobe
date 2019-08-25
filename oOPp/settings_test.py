@@ -168,6 +168,7 @@ NOSE_ARGS = [
     '--xunit-file=oopp_testresult/xunittest.xml',  # the XUnit report file
     '--with-coverage',
     '--cover-html',
+    '--cover-html-dir=oopp_testhtml',
     '--cover-package=rp',
 ]
 
