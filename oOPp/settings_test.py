@@ -95,7 +95,7 @@ LOGGING = {
     'loggers': {
         "oOPp" : {
             "level": "DEBUG",
-            "handlers": ["logfile"]
+            "handlers": ["console"]
         },
     }
 }
