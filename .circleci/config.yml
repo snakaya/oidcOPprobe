@@ -13,7 +13,7 @@ jobs:
           OOPP_DB_HOST: '127.0.0.1'
           OOPP_DB_USERID: 'root'
           OOPP_DB_PASSWORD: ''
-      - image: circleci/mysql:5.7
+      - image: circleci/mysql:5.7-ram
     working_directory: ~/repo
 
     steps:
