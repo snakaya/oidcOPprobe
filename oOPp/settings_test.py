@@ -71,7 +71,6 @@ TEMPLATES = [
     },
 ]
 
-LOGFILE_NAME = os.getenv('OOPP_LOG_NAME', '/var/log/oOPp/debug.log')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -84,12 +83,6 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "level": "DEBUG",
             "formatter": "custom"
-        },
-        "logfile": {
-            "class": "logging.FileHandler",
-            "level": "DEBUG",
-            "formatter": "custom",
-            "filename": LOGFILE_NAME
         }
     },
     'loggers': {
