@@ -1,0 +1,21 @@
+#
+# Systemd settings sample to serve oidcOPprobe/uWSGI
+#
+#    required: virtualenv named 'oopp3' for Python 3.7
+#
+[Unit]
+Description=uWSGI instance to serve oidcOPprobe
+After=network.target
+
+[Service]
+User=nginx
+Group=nginx
+WorkingDirectory=/var/www/django/oidcOPprobe
+Environment="DJANGO_SETTINGS_MODULE=oOPp.settings_live"
+#EnvironmentFile=/var/www/django/oidcOPprobe/rp/systemd.env
+
+ExecStartPre=/bin/bash -c "source /var/www/virtualenvs/oopp3/bin/activate"
+ExecStart=/var/www/virtualenvs/oopp3/bin/uwsgi --ini ./rp/uwsgi.ini
+
+[Install]
+WantedBy=multi-user.target
