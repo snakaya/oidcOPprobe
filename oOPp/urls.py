@@ -33,4 +33,4 @@ urlpatterns = [
     url(r'^apis/OIDC/Introspection/(.+)$', rp_views.oidc_introspection),
     url(r'^apis/OIDC/Custom/(.+)$', rp_views.oidc_custom),
     url(r'^apis/OIDC/Verify/(.+)$', rp_views.oidc_verify),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)    # Hached Ref: https://stackoverflow.com/questions/39907281/django-uwsgi-static-files-not-being-served-even-after-collectstatic
