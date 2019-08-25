@@ -54,7 +54,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            python manage.py test --settings oOPp.settings_test
+            "python manage.py test --settings oOPp.settings_test"
 
       - store_artifacts:
           path: test-reports
