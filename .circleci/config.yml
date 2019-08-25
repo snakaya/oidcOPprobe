@@ -45,6 +45,7 @@ jobs:
       - run:
           name: run tests
           command: |
+            mkdir ~/oopp_testresult
             . venv/bin/activate
             python manage.py test --settings oOPp.settings_test
 
