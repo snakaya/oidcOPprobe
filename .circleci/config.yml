@@ -4,9 +4,10 @@
 #
 version: 2.1
 
-executors:
-  shared-python-executor:
+jobs:
+  build:
     docker:
+      - image: circleci/mysql:5.7
       - image: circleci/python:3.7
         environment:
           OOPP_DB_NAME: ''
@@ -14,14 +15,7 @@ executors:
           OOPP_DB_USERID: 'root'
           OOPP_DB_PASSWORD: ''
     working_directory: ~/repo
-  shared-mysql-executor:
-    docker:
-      - image: circleci/mysql:5.7
 
-
-jobs:
-  build:
-    executor: shared-python-executor
     steps:
       - checkout
 
@@ -45,7 +39,6 @@ jobs:
           key: v1-dependencies-{{ checksum "requirements-py3.txt" }}
 
   test:
-    executor: shared-python-executor
     steps:
       - run:
           name: wait for db
@@ -67,6 +60,4 @@ workflows:
   build-and-test:
     jobs:
       - build
-      - test:
-        requires:
-          - build
+      - test
