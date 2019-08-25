@@ -46,8 +46,6 @@ jobs:
 
   test:
     executor: shared-python-executor
-    requires:
-      - build
     steps:
       - run:
           name: wait for db
@@ -70,3 +68,5 @@ workflows:
     jobs:
       - build
       - test
+        requires:
+          - build
