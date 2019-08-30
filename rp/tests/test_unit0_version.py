@@ -40,7 +40,7 @@ class VersionTestCase(TestCase):
 					ret_ver = f.read()
 		except IOError:
 			raise IOError
-		self.assertEquals(ret_ver, '1.0')
+		self.assertEquals(ret_ver, '1.1')
 	
 
 	
