@@ -3,24 +3,17 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2
+
 jobs:
   build:
     docker:
-      # specify the version you desire here
-      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
       - image: circleci/python:3.7
         environment:
           OOPP_DB_NAME: ''
           OOPP_DB_HOST: '127.0.0.1'
           OOPP_DB_USERID: 'root'
           OOPP_DB_PASSWORD: ''
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-      - image: circleci/mysql:5.7
-
+      - image: circleci/mysql:5.7-ram
     working_directory: ~/repo
 
     steps:
@@ -48,18 +41,24 @@ jobs:
       - run:
           name: wait for db
           command: 'dockerize -wait tcp://127.0.0.1:3306 -timeout 120s'
-
-      # run tests!
-      # this example uses Django's built-in test-runner
-      # other common Python testing frameworks include pytest and nose
-      # https://pytest.org
-      # https://nose.readthedocs.io
+      
       - run:
           name: run tests
           command: |
+            mkdir -p ./oopp_testresult
+            mkdir -p ./oopp_testhtml
             . venv/bin/activate
             python manage.py test --settings oOPp.settings_test
 
+      - store_test_results:
+          path: ./oopp_testresult
+      
       - store_artifacts:
-          path: test-reports
-          destination: test-reports
+          path: ./oopp_testresult
+
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - build
