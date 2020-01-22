@@ -410,7 +410,10 @@ class OIDCPreference(object):
 			c['options'] = self.o.options
 			c['supportPkce'] = self.o.supportPkce
 			
-			config, JWKSet = self.__getOPConfigurations()
+			try:
+				config, JWKSet = self.__getOPConfigurations()
+			except Exception:
+				config, JWKSet = (None, None)
 			if config is not None:
 				logger.debug(config)
 				c['configurations'] = json.dumps(json.loads(config), indent=2)
@@ -535,7 +538,8 @@ class OIDCPreference(object):
 		try:
 			configEndPoint = self.__getConfigurationValByKey(keyMap['specAPIs'][apiname]['configName'])
 		except Exception as exp:
-			raise
+			#raise
+			configEndPoint = None
 		
 		apiEndpoint = settingsEndPoint if settingsEndPoint != "" and settingsEndPoint is not None and configEndPoint != "" and configEndPoint is not None \
 			else ( configEndPoint if (settingsEndPoint == "" or settingsEndPoint is None) and configEndPoint != "" and configEndPoint is not None \

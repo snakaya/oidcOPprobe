@@ -35,17 +35,22 @@
 						$("#scopeText").val('openid');
 					}
 					
-					opconf = JSON.parse(data.configurations);
-					
-					if(opconf.scopes_supported) {
-						for(oc in opconf.scopes_supported) {
-							$('#scopeSelect').append('<option value="' + opconf.scopes_supported[oc] + '">' + opconf.scopes_supported[oc] + '</option>');
-						}
-					};
-					if(opconf.response_types_supported) {
-						for(oc in opconf.response_types_supported) {
-							$('#responseTypeSelect').append('<option value="' + opconf.response_types_supported[oc] + '">' + opconf.response_types_supported[oc] + '</option>');
-						}
+					if(data.configurations) {
+						opconf = JSON.parse(data.configurations);
+						
+						if(opconf.scopes_supported) {
+							for(oc in opconf.scopes_supported) {
+								$('#scopeSelect').append('<option value="' + opconf.scopes_supported[oc] + '">' + opconf.scopes_supported[oc] + '</option>');
+							}
+						};
+						if(opconf.response_types_supported) {
+							for(oc in opconf.response_types_supported) {
+								$('#responseTypeSelect').append('<option value="' + opconf.response_types_supported[oc] + '">' + opconf.response_types_supported[oc] + '</option>');
+							}
+						};
+					} else {
+						$('#scopeSelect').append('<option value="openid">openid</option>');
+						$('#responseTypeSelect').append('<option value="code">code</option>');
 					};
 					
 					openOPSettings();
@@ -58,6 +63,10 @@
                     } else {
                         showErrorBox(jqXHR);
                     }
+
+					$('#scopeSelect').append('<option value="openid">openid</option>');
+					$('#responseTypeSelect').append('<option value="code">code</option>');
+					openOPSettings();
                 }).always(function( ) {
                     $.LoadingOverlay("hide", true);
 					$(".btn").prop("disabled", false);
