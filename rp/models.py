@@ -399,7 +399,10 @@ class OIDCPreference(object):
 			c['issuer'] = self.o.issuer
 			c['clientId'] = self.o.clientId
 			c['clientSecret'] = "*" * len(self.o.clientSecret) if not(not self.o.clientSecret or self.o.clientSecret is None) else ""
-			c['redirect_url'] = settings.OIDC_REDIRECT_URL + self.opId
+			if self.o.redirect_url is None:
+				c['redirect_url'] = settings.OIDC_REDIRECT_URL + self.opId
+			else:
+				c['redirect_url'] = self.o.redirect_url
 			c['authorizationEndpoint'] = self.o.authorizationEndpoint
 			c['tokenizationEndpoint'] = self.o.tokenizationEndpoint
 			c['userinfoEndpoint'] = self.o.userinfoEndpoint
@@ -436,7 +439,10 @@ class OIDCPreference(object):
 				self.o.clientId = c['clientId']
 			if 'clientSecret' in c.keys():
 				self.o.clientSecret = c['clientSecret'] if len(c['clientSecret'].replace('*', '')) > 0 else self.o.clientSecret
-			self.o.redirect_url = settings.OIDC_REDIRECT_URL + self.opId
+			if not 'redirect_url' in c.keys() or c['redirect_url'] is None:
+				self.o.redirect_url = settings.OIDC_REDIRECT_URL + self.opId
+			else:
+				self.o.redirect_url = c['redirect_url']
 			if 'authorizationEndpoint' in c.keys():
 				self.o.authorizationEndpoint = c['authorizationEndpoint']
 			if 'tokenizationEndpoint' in c.keys():
