@@ -1,13 +1,10 @@
 # oidcOPprobe
 
-[![Python: 2.7](https://img.shields.io/badge/Python-2.7-4584b6.svg?style=popout&logo=python)](https://www.python.org/)
-[![Python: 3.6](https://img.shields.io/badge/Python-3.6-4584b6.svg?style=popout&logo=python)](https://www.python.org/)
+[![Python: 3.7](https://img.shields.io/badge/Python-3.7-4584b6.svg?style=popout&logo=python)](https://www.python.org/)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-a31f34.svg?style=popout)](https://raw.githubusercontent.com/snakaya/WebAuthn-PyRP/master/LICENSE)
 
 Probe RP for communications with OP in OpenID Connect/OAuth2.
-
-てすと
 
 ## Feature
 
@@ -15,7 +12,7 @@ Probe RP for communications with OP in OpenID Connect/OAuth2.
 
 ## Requirement
 
-- Python2.7 + Django ==1.11 or Python3.6 + Django >=2.2
+- Python3.7 + Django >=2.2
 - MySQL, PostgreSQL, Oracle or SQLite
 
 ## Installation
