@@ -355,7 +355,10 @@ class OIDCPreference(object):
 		return self.o.supportPkce
 	def getIdTokenSigningAlgValuesSupported(self):
 		try:
-			c, _ = self.__getOPConfigurations()
+			try:
+				c, _ = self.__getOPConfigurations()
+			except Exception as exp:
+				c = None
 			if c is None:
 				return []
 			config = json.loads(c)
@@ -368,7 +371,10 @@ class OIDCPreference(object):
 			raise
 	def getConfigration(self):
 		try:
-			c, _ = self.__getOPConfigurations()
+			try:
+				c, _ = self.__getOPConfigurations()
+			except Exception as exp:
+				c = None
 			if c is None:
 				return []
 			config = json.loads(c)
@@ -378,7 +384,10 @@ class OIDCPreference(object):
 			raise
 	def getJWKSet(self):
 		try:
-			_, j = self.__getOPConfigurations()
+			try:
+				_, j = self.__getOPConfigurations()
+			except Exception as exp:
+				j = None
 			if j is None or j == "":
 				return []
 			JWKSet = json.loads(j)
@@ -702,8 +711,8 @@ class OIDCTokenStore(object):
 			raise ParamError('clientId')
 		if not clientSecret or clientSecret is None:
 			raise ParamError('clientSecret')
-		if not sigAlgSupported or sigAlgSupported is None:
-			raise ParamError('sigAlgSupported')
+		#if not sigAlgSupported or sigAlgSupported is None:
+		#	raise ParamError('sigAlgSupported')
 		
 		c = {}
 		
