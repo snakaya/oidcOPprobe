@@ -658,10 +658,11 @@ class OIDCTokenStore(object):
 
 		try:
 			logger.debug('--- Setting session object (' + type + ') START---')
-			for p in params.keys():
-				if p in keyMap['response'][type]['paramNames']:
-					logger.debug(p + ' = ' + str(params[p]))
-					self.session[p] = str(params[p])
+			if type in keyMap['response']:
+				for p in params.keys():
+					if p in keyMap['response'][type]['paramNames']:
+						logger.debug(p + ' = ' + str(params[p]))
+						self.session[p] = str(params[p])
 			logger.debug('--- Setting session object (' + type + ') END  ---')
 		except Exception as exp:
 			logger.error('[OIDCTokenStore.setResponse] ' + str(exp))
